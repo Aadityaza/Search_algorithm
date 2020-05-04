@@ -19,9 +19,10 @@ using namespace std;
             return arr[a];
         
     }
-    bool explored_node[6] = {0,0,0,0,0,0};
+    
     
     void DFS(int source, int destination) {
+        bool explored_node[6] = {0,0,0,0,0,0};
         int result = source;
         frontier_stack.push(source);
         cout << put(source) << " was added to frontear" << endl;
@@ -52,6 +53,7 @@ using namespace std;
         }
     }
     void BFS(int source, int destination) {
+        bool explored_node[6] = {0,0,0,0,0,0};
         int result = source;
         frontier_queue.push(source);
         cout << put(source) << " was added to frontear" << endl;
