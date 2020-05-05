@@ -64,12 +64,14 @@ public:
 
 	void BFS(int source, int destination) {
 		queue <int> frontier_queue;
-		bool *visited_node=new bool [no_node];
+		bool* visited_node = new bool[no_node];
+		bool*explored_node = new bool[no_node];
 		for (int i = 0; i != no_node; i++) {
 			visited_node[i] = 0;
+			explored_node[i] = 0;
 		}
 		int result = source;
-		visited_node[result] = 1;
+		
 
 		frontier_queue.push(source);
 		cout << source << " was added to frontear" << endl;
@@ -80,6 +82,7 @@ public:
 				break;
 			}
 			result = frontier_queue.front();
+			explored_node[result] = 1;
 			frontier_queue.pop();
 			cout << result << " was removed from frontear" << endl;
 			
@@ -91,7 +94,8 @@ public:
 				
 			}
 			cout << "                           " << result << "is explored" << endl;
-
+			disp_maze(explored_node);
+			visited_node[result] = 1;
 			if (result == destination) {
 				cout << result << " found" << endl;
 				break;
@@ -112,12 +116,21 @@ public:
 
 		}
 	}
-	void disp_maze() {
-		for (int i = 0; i != maze_width; i++) {
-			for (int j = 0; j != no_node; j++) {
-							
+	void disp_maze(bool explored_node[]) {
+		
+			for (int i = 0; i != no_node; i++) {
+				if (i % maze_width == 0) {
+					cout << endl;
+				}
+				if (explored_node[i]) {
+					cout << " # ";
+				}
+				else {
+					cout << " _ ";
+				}
 			}
-		}
+			cout << endl;
+		
 	}
 
 };
