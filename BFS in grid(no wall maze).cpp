@@ -1,3 +1,4 @@
+//initial algorithm test oh simple graph
 #include<iostream>
 #include<queue>
 #include<stack>
