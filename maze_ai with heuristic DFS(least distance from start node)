@@ -86,12 +86,15 @@ public:
 
 	bool* path = NULL;		//stores the final path
 
-	int source,destination;
+	int source, destination;
 
 	//depth first searches the maze for destinatin from source
 	void DFS(int source, int destination) {
 		this->source = source;
 		this->destination = destination;
+		
+		cout << "\n source is" << source << "\ndestination is " << destination;
+		sleep_until(system_clock::now() + 5s);
 		stack <int> frontier_queue;
 		bool* visited_node = new bool[no_node];
 		bool* explored_node = new bool[no_node];
@@ -107,7 +110,7 @@ public:
 		frontier_queue.push(source);
 		//cout << source << " was added to frontear" << endl;
 		disp_maze(explored_node);
-		sleep_until(system_clock::now() + 2s);
+		sleep_until(system_clock::now() + 500ns);
 		while (1) {
 			system("cls");
 			if (frontier_queue.empty()) {
@@ -143,7 +146,7 @@ public:
 				for (int i = 0; i != 4; i++) {
 					to_add[i] = node_list[result].connection[i];
 				}
-				bubble_sort(to_add,4);//only 4 connections // size of array is 4
+				bubble_sort(to_add, 4);//only 4 connections // size of array is 4
 				for (int i = 0; i != 4; i++) {
 					int adj_node = to_add[i];
 					cout << endl;
@@ -229,7 +232,7 @@ public:
 
 
 	//displayes the path found by search algorithm
-	void disp_path() {
+	void disp_path(int destination) {
 		while (node_list[destination].parent_node != -1) {
 			path[destination] = 1;
 			destination = node_list[destination].parent_node;
@@ -260,8 +263,10 @@ public:
 			cout << heuristic(i) << "  ";
 		}
 
+		cout << "\n source is" << source << "\ndestination is " << destination;
+
 	}
-	 int heuristic(int pos) {
+	int heuristic(int pos) {
 		int sq_dist = abs((pos % maze_width) - (destination % maze_width)) + abs((pos / maze_width) - (destination / maze_width));
 		return sq_dist;
 	}
@@ -298,8 +303,9 @@ int main() {
 
 
 	M.DFS(14, 81);
-	M.disp_path();
+	M.disp_path(81);
 	M.disp_sq_dist();
+	
 
 
 }
