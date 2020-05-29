@@ -3,7 +3,7 @@
 #include<stack>
 #include<thread>
 #include<stdlib.h>
-#include<stdlib.h>
+#include<algorithm>
 
 using namespace std;
 using namespace std::this_thread; // sleep_for, sleep_until
@@ -86,77 +86,12 @@ public:
 
 	bool* path = NULL;		//stores the final path
 
-
-//breath first searches the maze for destinatin from source
-	void BFS(int source, int destination) {
-		queue <int> frontier_queue;
-		bool* visited_node = new bool[no_node];
-		bool* explored_node = new bool[no_node];
-		path = new bool[no_node];
-		for (int i = 0; i != no_node; i++) {
-			visited_node[i] = 0;
-			explored_node[i] = 0;
-			path[i] = 0;
-		}
-		int result = source;
-
-
-		frontier_queue.push(source);
-		//cout << source << " was added to frontear" << endl;
-		disp_maze(explored_node, source, destination);
-		sleep_until(system_clock::now() + 2s);
-		while (1) {
-			if (frontier_queue.empty()) {
-				//system("Color 04");
-				cout << "no solution !!" << endl;
-				break;
-			}
-			result = frontier_queue.front();
-			explored_node[result] = 1;
-			frontier_queue.pop();
-			cout << result << " was removed from frontear" << endl;
-
-			cout << "visited nodes are:  ";
-			for (int i = 0; i != no_node; i++) {
-				if (visited_node[i] == 1) {
-					cout << i << "  ";
-				}
-
-			}
-			cout << endl;
-
-			disp_maze(explored_node, source, destination);
-			visited_node[result] = 1;
-			if (result == destination) {
-
-				cout << endl << result << " found !!" << endl;
-				//system("Color 04");
-				break;
-			}
-			else {
-				for (int i = 0; i != 4; i++) {
-					int adj_node = node_list[result].connection[i];
-
-					cout << endl;
-					if (adj_node != -1 && visited_node[adj_node] != 1 && node_list[result].is_wall == false) {
-						frontier_queue.push(adj_node);
-						visited_node[adj_node] = 1;
-						node_list[adj_node].parent_node = result;
-						cout << adj_node << " was added to frontear" << endl;
-					}
-
-				}
-			}
-
-			sleep_until(system_clock::now() + 200ns);
-			system("cls");
-
-		}
-	}
-
+	int source,destination;
 
 	//depth first searches the maze for destinatin from source
 	void DFS(int source, int destination) {
+		this->source = source;
+		this->destination = destination;
 		stack <int> frontier_queue;
 		bool* visited_node = new bool[no_node];
 		bool* explored_node = new bool[no_node];
@@ -171,7 +106,7 @@ public:
 
 		frontier_queue.push(source);
 		//cout << source << " was added to frontear" << endl;
-		disp_maze(explored_node, source, destination);
+		disp_maze(explored_node);
 		sleep_until(system_clock::now() + 2s);
 		while (1) {
 			system("cls");
@@ -194,7 +129,7 @@ public:
 			cout << endl;
 
 
-			disp_maze(explored_node, source, destination);
+			disp_maze(explored_node);
 			visited_node[result] = 1;
 			if (result == destination) {
 
@@ -204,13 +139,13 @@ public:
 				break;
 			}
 			else {
-				int to_add[4] = {0,0,0,0};
+				int to_add[4] = { 0,0,0,0 };
 				for (int i = 0; i != 4; i++) {
 					to_add[i] = node_list[result].connection[i];
 				}
-				sort(to_add, to_add + 4);//only 4 connections // size of array is 4
-					for (int i = 0; i != 4; i++) {
-						int adj_node = to_add[i];
+				bubble_sort(to_add,4);//only 4 connections // size of array is 4
+				for (int i = 0; i != 4; i++) {
+					int adj_node = to_add[i];
 					cout << endl;
 					if (adj_node != -1 && visited_node[adj_node] != 1 && node_list[result].is_wall == false) {
 
@@ -222,16 +157,36 @@ public:
 
 				}
 			}
-
 			sleep_until(system_clock::now() + 900ns);
-
-
-
 		}
 	}
 
+	void swap(int* a, int* b) {
+		int temp = *a;
+		*a = *b;
+		*b = temp;
+	}
+
+	//implementation of bubble sort algorithm
+	void bubble_sort(int* arr, int n) {
+
+		for (int j = 0; j != n; j++) {
+			int count = 0;                         //stores no of swaps made in one scan
+			for (int i = 0; (i + 1) != n; i++) {
+				if (heuristic(arr[i]) < heuristic(arr[i + 1])) {            //compare element with its right adjacent element
+					count++;
+					swap(&arr[i + 1], &arr[i]);
+				}
+			}
+			if (count == 0)                            //if no swaps ware made then break
+				break;                               //array is already sorted
+
+		}
+
+	}
+
 	//displayes current status of maze
-	void disp_maze(bool explored_node[], int source, int destination) {
+	void disp_maze(bool explored_node[]) {
 
 
 		for (int i = 0; i != no_node; i++) {
@@ -274,7 +229,7 @@ public:
 
 
 	//displayes the path found by search algorithm
-	void disp_path(int destination) {
+	void disp_path() {
 		while (node_list[destination].parent_node != -1) {
 			path[destination] = 1;
 			destination = node_list[destination].parent_node;
@@ -297,18 +252,18 @@ public:
 		}
 		cout << endl;
 	}
-	void disp_sq_dist(int destination) {
+	void disp_sq_dist() {
 		for (int i = 0; i != no_node; i++) {
 			if (i % maze_width == 0) {
 				cout << endl;
 			}
-			cout << heuristic(i, destination) << "  ";
+			cout << heuristic(i) << "  ";
 		}
 
 	}
-	int heuristic(int pos,  int destination) {
-		int sq_dist = abs((pos % maze_width)-(destination % maze_width)) + abs((pos / maze_width) - (destination / maze_width));
-			return sq_dist;
+	 int heuristic(int pos) {
+		int sq_dist = abs((pos % maze_width) - (destination % maze_width)) + abs((pos / maze_width) - (destination / maze_width));
+		return sq_dist;
 	}
 };
 
@@ -339,12 +294,12 @@ int main() {
 		{0, 0, 0, 0, 1, 1, 1, 1, 0, 0 }
 
 	};
-	maze M(13, 10, &maze_matrix[0][0]);
+	maze M(10, 10, &maze_matrix2[0][0]);
 
 
-	M.DFS(14, 107);
-	M.disp_path(107);
-	M.disp_sq_dist(107);
+	M.DFS(14, 81);
+	M.disp_path();
+	M.disp_sq_dist();
 
 
 }
