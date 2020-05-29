@@ -267,8 +267,9 @@ public:
 
 	}
 	int heuristic(int pos) {
-		int sq_dist = abs((pos % maze_width) - (destination % maze_width)) + abs((pos / maze_width) - (destination / maze_width));
-		return sq_dist;
+		//int distance_from_destination = abs((pos % maze_width) - (destination % maze_width)) + abs((pos / maze_width) - (destination / maze_width));
+		int distance_from_source= abs((pos % maze_width) - (source % maze_width)) + abs((pos / maze_width) - (source / maze_width));
+		return distance_from_destination;
 	}
 };
 
