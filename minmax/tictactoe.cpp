@@ -13,12 +13,14 @@ public:
         draw();
         //check if termainal state
         if (check('X')) {
+			system("Color 02");
             cout <<" X won! Congralutations :) "<< endl;
             break;
         }
         computers_move();
         draw();
         if (check('O')) {
+			system("Color 04");
             cout << " O won, You loose :( " << endl;
             break;
         }
@@ -137,4 +139,5 @@ int main() {
 	TicTacToe demo;
 	demo.game();
 	return 0;
+
 }
