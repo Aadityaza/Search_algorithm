@@ -6,26 +6,29 @@ class TicTacToe {
 public:
 	char player_mat[3][3] = { {' ',' ',' '},{' ',' ',' '},{' ',' ',' '} };
 
-    void game() {
+	void game() {
 		//game loop
-        while(true){
-        input();
-        draw();
-        //check if termainal state
-        if (check('X')) {
-			system("Color 02");
-            cout <<" X won! Congralutations :) "<< endl;
-            break;
-        }
-        computers_move();
-        draw();
-        if (check('O')) {
-			system("Color 04");
-            cout << " O won, You loose :( " << endl;
-            break;
-        }
-        }
-    }
+		while (true) {
+			input();
+			draw();
+			//check if termainal state
+			if (check('X')) {
+				system("Color 02");
+				cout << " X won! Congralutations :) " << endl;
+				break;
+			}
+			computers_move();
+			draw();
+			if (check('O')) {
+				system("Color 04");
+				cout << " O won, You loose :( " << endl;
+				break;
+			}
+			if (!(move_left())) {
+				cout << "It's a draw" << endl;
+			}
+		}
+	}
 	//check if board is full
 	bool move_left() {
 		for (int i = 0; i != 3; i++) {
