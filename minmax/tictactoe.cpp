@@ -30,7 +30,7 @@ public:
 	bool move_left() {
 		for (int i = 0; i != 3; i++) {
 			for (int j = 0; j != 3; j++) {
-				if (player_mat[i][j] == NULL)return true;
+				if (player_mat[i][j] == ' ')return true;
 			}
 		}
 		return false;
